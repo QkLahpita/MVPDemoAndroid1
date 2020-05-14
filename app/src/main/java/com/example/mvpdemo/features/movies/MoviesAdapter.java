@@ -1,6 +1,7 @@
 package com.example.mvpdemo.features.movies;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.mvpdemo.R;
 import com.example.mvpdemo.api.RetrofitConfiguration;
+import com.example.mvpdemo.features.detail.MovieDetailActivity;
 import com.example.mvpdemo.models.data_models.GetMoviesResponse;
 
 import java.util.List;
@@ -68,7 +70,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    Intent intent = new Intent(context, MovieDetailActivity.class);
+                    intent.putExtra("movie_id", movie.getId());
+                    context.startActivity(intent);
                 }
             });
         }
