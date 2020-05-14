@@ -1,10 +1,10 @@
 package com.example.mvpdemo.features.movies;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,8 +21,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static androidx.constraintlayout.widget.Constraints.TAG;
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -31,6 +29,8 @@ public class MoviesFragment extends Fragment implements MoviesContract.View {
 
     @BindView(R.id.rv_movies)
     RecyclerView rvMovies;
+    @BindView(R.id.ll_loading)
+    LinearLayout llLoading;
 
     private MoviesAdapter moviesAdapter;
     private List<GetMoviesResponse.ResultsBean> movies = new ArrayList<>();
@@ -99,5 +99,15 @@ public class MoviesFragment extends Fragment implements MoviesContract.View {
     public void showErrorToast(String error) {
         isLoading = false;
         Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showLoadingIndicator() {
+        llLoading.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideLoadingIndicator() {
+        llLoading.setVisibility(View.GONE);
     }
 }

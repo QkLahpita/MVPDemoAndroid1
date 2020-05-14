@@ -9,6 +9,8 @@ public interface MoviesContract {
     interface View {
         void setDataToRecyclerView(List<GetMoviesResponse.ResultsBean> movies);
         void showErrorToast(String error);
+        void showLoadingIndicator();
+        void hideLoadingIndicator();
     }
 
     interface Presenter {
