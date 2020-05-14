@@ -21,7 +21,7 @@ import butterknife.OnClick;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AccountFragment extends BaseFragment {
+public class AccountFragment extends BaseFragment implements AccountContract.View {
 
     @BindView(R.id.et_username)
     EditText etUsername;
@@ -38,13 +38,16 @@ public class AccountFragment extends BaseFragment {
     @BindView(R.id.ll_loading)
     LinearLayout llLoading;
 
+    private AccountPresenter accountPresenter;
+
     public AccountFragment() {
         // Required empty public constructor
     }
 
     @Override
     protected void onViewCreated(View rootView) {
-
+        accountPresenter = new AccountPresenter(this);
+        accountPresenter.getSessionId(getContext());
     }
 
     @Override
@@ -60,5 +63,17 @@ public class AccountFragment extends BaseFragment {
             case R.id.tv_sign_out:
                 break;
         }
+    }
+
+    @Override
+    public void showAccountSection() {
+        llAccount.setVisibility(View.VISIBLE);
+        llSignIn.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void showLoginSection() {
+        llAccount.setVisibility(View.INVISIBLE);
+        llSignIn.setVisibility(View.VISIBLE);
     }
 }

@@ -27,14 +27,15 @@ public class MoviesPresenter implements MoviesContract.Presenter {
         call.enqueue(new Callback<GetMoviesResponse>() {
             @Override
             public void onResponse(Call<GetMoviesResponse> call, Response<GetMoviesResponse> response) {
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        view.setDataToRecyclerView(response.body().getResults());
-                        view.hideLoadingIndicator();
-                    }
-                }, 2000);
+//                Handler handler = new Handler();
+//                handler.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//
+//                    }
+//                }, 2000);
+                view.setDataToRecyclerView(response.body().getResults());
+                view.hideLoadingIndicator();
             }
 
             @Override
