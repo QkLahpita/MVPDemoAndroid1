@@ -1,9 +1,6 @@
 package com.example.mvpdemo.features.account;
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -12,9 +9,9 @@ import androidx.fragment.app.Fragment;
 
 import com.example.mvpdemo.BaseFragment;
 import com.example.mvpdemo.R;
+import com.example.mvpdemo.models.share_pref.AccountSharePref;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
@@ -46,8 +43,8 @@ public class AccountFragment extends BaseFragment implements AccountContract.Vie
 
     @Override
     protected void onViewCreated(View rootView) {
-        accountPresenter = new AccountPresenter(this);
-        accountPresenter.getSessionId(getContext());
+        accountPresenter = new AccountPresenter(this, new AccountSharePref(getContext()));
+        accountPresenter.getSessionId();
     }
 
     @Override

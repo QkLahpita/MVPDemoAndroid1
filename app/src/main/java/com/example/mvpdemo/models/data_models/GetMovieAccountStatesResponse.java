@@ -1,4 +1,4 @@
-package com.example.mvpdemo.models;
+package com.example.mvpdemo.models.data_models;
 
 public class GetMovieAccountStatesResponse {
 

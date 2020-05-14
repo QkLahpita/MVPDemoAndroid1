@@ -1,10 +1,8 @@
 package com.example.mvpdemo.features.movies;
 
-import android.os.Handler;
-
 import com.example.mvpdemo.api.APIService;
 import com.example.mvpdemo.api.RetrofitConfiguration;
-import com.example.mvpdemo.models.GetMoviesResponse;
+import com.example.mvpdemo.models.data_models.GetMoviesResponse;
 
 import retrofit2.Call;
 import retrofit2.Callback;

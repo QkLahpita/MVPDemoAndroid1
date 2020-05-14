@@ -1,9 +1,6 @@
 package com.example.mvpdemo.features.movies;
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -14,13 +11,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mvpdemo.BaseFragment;
 import com.example.mvpdemo.R;
-import com.example.mvpdemo.models.GetMoviesResponse;
+import com.example.mvpdemo.models.data_models.GetMoviesResponse;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * A simple {@link Fragment} subclass.

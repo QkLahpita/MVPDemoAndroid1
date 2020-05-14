@@ -1,17 +1,17 @@
 package com.example.mvpdemo.api;
 
-import com.example.mvpdemo.models.DeleteSessionIdRequest;
-import com.example.mvpdemo.models.DeleteSessionIdResponse;
-import com.example.mvpdemo.models.GetCreateRequestTokenResponse;
-import com.example.mvpdemo.models.GetMovieAccountStatesResponse;
-import com.example.mvpdemo.models.GetMovieDetailResponse;
-import com.example.mvpdemo.models.GetMoviesResponse;
-import com.example.mvpdemo.models.PostCreateSessionRequest;
-import com.example.mvpdemo.models.PostCreateSessionResponse;
-import com.example.mvpdemo.models.PostCreateSessionWithLoginRequest;
-import com.example.mvpdemo.models.PostCreateSessionWithLoginResponse;
-import com.example.mvpdemo.models.SetFavouriteMovieRequest;
-import com.example.mvpdemo.models.SetFavouriteMovieResponse;
+import com.example.mvpdemo.models.data_models.DeleteSessionIdRequest;
+import com.example.mvpdemo.models.data_models.DeleteSessionIdResponse;
+import com.example.mvpdemo.models.data_models.GetCreateRequestTokenResponse;
+import com.example.mvpdemo.models.data_models.GetMovieAccountStatesResponse;
+import com.example.mvpdemo.models.data_models.GetMovieDetailResponse;
+import com.example.mvpdemo.models.data_models.GetMoviesResponse;
+import com.example.mvpdemo.models.data_models.PostCreateSessionRequest;
+import com.example.mvpdemo.models.data_models.PostCreateSessionResponse;
+import com.example.mvpdemo.models.data_models.PostCreateSessionWithLoginRequest;
+import com.example.mvpdemo.models.data_models.PostCreateSessionWithLoginResponse;
+import com.example.mvpdemo.models.data_models.SetFavouriteMovieRequest;
+import com.example.mvpdemo.models.data_models.SetFavouriteMovieResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Body;

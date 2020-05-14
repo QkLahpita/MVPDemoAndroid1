@@ -1,7 +1,6 @@
 package com.example.mvpdemo.features.movies;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.mvpdemo.R;
 import com.example.mvpdemo.api.RetrofitConfiguration;
-import com.example.mvpdemo.models.GetMoviesResponse;
+import com.example.mvpdemo.models.data_models.GetMoviesResponse;
 
 import java.util.List;
 

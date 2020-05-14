@@ -1,7 +1,5 @@
 package com.example.mvpdemo.features.account;
 
-import android.content.Context;
-
 public interface AccountContract {
     interface View {
         void showAccountSection();
@@ -9,6 +7,6 @@ public interface AccountContract {
     }
 
     interface Presenter {
-        void getSessionId(Context context);
+        void getSessionId();
     }
 }

@@ -1,6 +1,6 @@
 package com.example.mvpdemo.features.movies;
 
-import com.example.mvpdemo.models.GetMoviesResponse;
+import com.example.mvpdemo.models.data_models.GetMoviesResponse;
 
 import java.util.List;
 
