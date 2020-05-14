@@ -4,6 +4,8 @@ import com.example.mvpdemo.api.APIService;
 import com.example.mvpdemo.api.RetrofitConfiguration;
 import com.example.mvpdemo.models.data_models.GetMovieAccountStatesResponse;
 import com.example.mvpdemo.models.data_models.GetMovieDetailResponse;
+import com.example.mvpdemo.models.data_models.SetFavouriteMovieRequest;
+import com.example.mvpdemo.models.data_models.SetFavouriteMovieResponse;
 import com.example.mvpdemo.models.share_pref.AccountSharePref;
 
 import retrofit2.Call;
@@ -29,7 +31,26 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter {
 
     @Override
     public void updateFavouriteMovie(int movieId, boolean isFavourite) {
+        view.showLoadingIndicator();
+        SetFavouriteMovieRequest body = new SetFavouriteMovieRequest(movieId, !isFavourite);
+        Call<SetFavouriteMovieResponse> call = service.setFavouriteMovie(body, accountSharePref.getSessionId());
+        call.enqueue(new Callback<SetFavouriteMovieResponse>() {
+            @Override
+            public void onResponse(Call<SetFavouriteMovieResponse> call, Response<SetFavouriteMovieResponse> response) {
+                view.hideLoadingIndicator();
+                if (response.code() == 201 || response.code() == 200) {
+                    view.updateFavouriteIcon(!isFavourite);
+                } else {
+                    view.showErrorFromServer(response);
+                }
+            }
 
+            @Override
+            public void onFailure(Call<SetFavouriteMovieResponse> call, Throwable t) {
+                view.hideLoadingIndicator();
+                view.showErrorWhenFailure(t.toString());
+            }
+        });
     }
 
     @Override

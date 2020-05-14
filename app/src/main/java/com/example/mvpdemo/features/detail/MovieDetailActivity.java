@@ -62,6 +62,8 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     ImageView ivFavourite;
 
     private MovieDetailPresenter movieDetailPresenter;
+    private boolean isFavourite;
+    private int movieId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,8 +79,8 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     }
 
     private void loadData() {
-        int id = getIntent().getIntExtra("movie_id", -1);
-        movieDetailPresenter.getMovieDetail(id);
+        movieId = getIntent().getIntExtra("movie_id", -1);
+        movieDetailPresenter.getMovieDetail(movieId);
     }
 
     private void setupUI() {
@@ -99,8 +101,10 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
             case R.id.ll_watch_trailer:
                 break;
             case R.id.iv_back:
+                onBackPressed();
                 break;
             case R.id.iv_favourite:
+                movieDetailPresenter.updateFavouriteMovie(movieId, isFavourite);
                 break;
         }
     }
@@ -185,6 +189,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
     @Override
     public void updateFavouriteIcon(boolean isFavourite) {
+        this.isFavourite = isFavourite;
         if (isFavourite) {
             ivFavourite.setImageResource(R.drawable.ic_favorite_black_24dp);
         } else {
