@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mvpdemo.BaseFragment;
 import com.example.mvpdemo.R;
 import com.example.mvpdemo.models.GetMoviesResponse;
 
@@ -25,7 +26,7 @@ import butterknife.ButterKnife;
  * A simple {@link Fragment} subclass.
  */
 //3. create view
-public class MoviesFragment extends Fragment implements MoviesContract.View {
+public class MoviesFragment extends BaseFragment implements MoviesContract.View {
 
     @BindView(R.id.rv_movies)
     RecyclerView rvMovies;
@@ -47,17 +48,16 @@ public class MoviesFragment extends Fragment implements MoviesContract.View {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_movies, container, false);
-        ButterKnife.bind(this, view);
-
+    protected void onViewCreated(View rootView) {
         moviesPresenter = new MoviesPresenter(this);
 
         setupUI();
         loadData();
+    }
 
-        return view;
+    @Override
+    protected int getLayout() {
+        return R.layout.fragment_movies;
     }
 
     private void loadData() {
