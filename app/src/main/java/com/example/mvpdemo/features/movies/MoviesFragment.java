@@ -1,0 +1,103 @@
+package com.example.mvpdemo.features.movies;
+
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.mvpdemo.R;
+import com.example.mvpdemo.models.GetMoviesResponse;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+import static androidx.constraintlayout.widget.Constraints.TAG;
+
+/**
+ * A simple {@link Fragment} subclass.
+ */
+//3. create view
+public class MoviesFragment extends Fragment implements MoviesContract.View {
+
+    @BindView(R.id.rv_movies)
+    RecyclerView rvMovies;
+
+    private MoviesAdapter moviesAdapter;
+    private List<GetMoviesResponse.ResultsBean> movies = new ArrayList<>();
+
+    private MoviesPresenter moviesPresenter;
+
+    private int page = 1;
+    private int totalItemCount, lastVisibleItem;
+    private int visibleThreshold = 5;
+    private boolean isLoading;
+
+    public MoviesFragment() {
+        // Required empty public constructor
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_movies, container, false);
+        ButterKnife.bind(this, view);
+
+        moviesPresenter = new MoviesPresenter(this);
+
+        setupUI();
+        loadData();
+
+        return view;
+    }
+
+    private void loadData() {
+        moviesPresenter.getMovies(page);
+    }
+
+    private void setupUI() {
+        final GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
+        rvMovies.setLayoutManager(gridLayoutManager);
+
+        moviesAdapter = new MoviesAdapter(movies);
+        rvMovies.setAdapter(moviesAdapter);
+
+        rvMovies.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                totalItemCount = gridLayoutManager.getItemCount();
+                lastVisibleItem = gridLayoutManager.findLastVisibleItemPosition();
+
+                if (!isLoading && lastVisibleItem >= totalItemCount - visibleThreshold) {
+                    page++;
+                    loadData();
+                    isLoading = true;
+                }
+            }
+        });
+    }
+
+    @Override
+    public void setDataToRecyclerView(List<GetMoviesResponse.ResultsBean> movies) {
+        isLoading = false;
+        this.movies.addAll(movies);
+        moviesAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void showErrorToast(String error) {
+        isLoading = false;
+        Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+    }
+}

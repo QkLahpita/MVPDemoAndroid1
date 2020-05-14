@@ -1,17 +1,17 @@
 package com.example.mvpdemo.api;
 
-import com.example.android1_module3_tmdb.models.DeleteSessionIdRequest;
-import com.example.android1_module3_tmdb.models.DeleteSessionIdResponse;
-import com.example.android1_module3_tmdb.models.GetCreateRequestTokenResponse;
-import com.example.android1_module3_tmdb.models.GetMovieAccountStatesResponse;
-import com.example.android1_module3_tmdb.models.GetMovieDetailResponse;
-import com.example.android1_module3_tmdb.models.GetMoviesResponse;
-import com.example.android1_module3_tmdb.models.PostCreateSessionRequest;
-import com.example.android1_module3_tmdb.models.PostCreateSessionResponse;
-import com.example.android1_module3_tmdb.models.PostCreateSessionWithLoginRequest;
-import com.example.android1_module3_tmdb.models.PostCreateSessionWithLoginResponse;
-import com.example.android1_module3_tmdb.models.SetFavouriteMovieRequest;
-import com.example.android1_module3_tmdb.models.SetFavouriteMovieResponse;
+import com.example.mvpdemo.models.DeleteSessionIdRequest;
+import com.example.mvpdemo.models.DeleteSessionIdResponse;
+import com.example.mvpdemo.models.GetCreateRequestTokenResponse;
+import com.example.mvpdemo.models.GetMovieAccountStatesResponse;
+import com.example.mvpdemo.models.GetMovieDetailResponse;
+import com.example.mvpdemo.models.GetMoviesResponse;
+import com.example.mvpdemo.models.PostCreateSessionRequest;
+import com.example.mvpdemo.models.PostCreateSessionResponse;
+import com.example.mvpdemo.models.PostCreateSessionWithLoginRequest;
+import com.example.mvpdemo.models.PostCreateSessionWithLoginResponse;
+import com.example.mvpdemo.models.SetFavouriteMovieRequest;
+import com.example.mvpdemo.models.SetFavouriteMovieResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
