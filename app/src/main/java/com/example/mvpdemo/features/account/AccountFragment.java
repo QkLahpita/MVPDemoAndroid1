@@ -62,6 +62,7 @@ public class AccountFragment extends BaseFragment implements AccountContract.Vie
                 accountPresenter.signIn(etUsername.getText().toString(), etPassword.getText().toString());
                 break;
             case R.id.tv_sign_out:
+                accountPresenter.signOut();
                 break;
         }
     }

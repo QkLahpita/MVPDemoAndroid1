@@ -15,5 +15,6 @@ public interface AccountContract {
     interface Presenter {
         void getSessionId();
         void signIn(String username, String password);
+        void signOut();
     }
 }

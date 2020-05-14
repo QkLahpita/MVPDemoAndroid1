@@ -2,6 +2,8 @@ package com.example.mvpdemo.features.account;
 
 import com.example.mvpdemo.api.APIService;
 import com.example.mvpdemo.api.RetrofitConfiguration;
+import com.example.mvpdemo.models.data_models.DeleteSessionIdRequest;
+import com.example.mvpdemo.models.data_models.DeleteSessionIdResponse;
 import com.example.mvpdemo.models.data_models.GetCreateRequestTokenResponse;
 import com.example.mvpdemo.models.data_models.PostCreateSessionRequest;
 import com.example.mvpdemo.models.data_models.PostCreateSessionResponse;
@@ -37,6 +39,32 @@ public class AccountPresenter implements AccountContract.Presenter {
     @Override
     public void signIn(String username, String password) {
         createRequestToken(username, password);
+    }
+
+    @Override
+    public void signOut() {
+        view.showLoadingIndicator();
+        DeleteSessionIdRequest body = new DeleteSessionIdRequest();
+        body.setSession_id(accountSharePref.getSessionId());
+        Call<DeleteSessionIdResponse> call = service.deleteSessionId(body);
+        call.enqueue(new Callback<DeleteSessionIdResponse>() {
+            @Override
+            public void onResponse(Call<DeleteSessionIdResponse> call, Response<DeleteSessionIdResponse> response) {
+                view.hideLoadingIndicator();
+                if (response.code() == 200) {
+                    view.showLoginSection();
+                    accountSharePref.saveSessionId(null);
+                } else {
+                    view.showErrorFromServer(response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DeleteSessionIdResponse> call, Throwable t) {
+                view.hideLoadingIndicator();
+                view.showErrorWhenFailure(t.toString());
+            }
+        });
     }
 
     private void createRequestToken(String username, String password) {
