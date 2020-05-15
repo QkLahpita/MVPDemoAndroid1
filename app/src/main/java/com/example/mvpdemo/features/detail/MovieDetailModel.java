@@ -1,6 +1,9 @@
 package com.example.mvpdemo.features.detail;
 
 import com.example.mvpdemo.api.APIService;
+import com.example.mvpdemo.api.RetrofitConfiguration;
+import com.example.mvpdemo.models.data_models.GetMovieAccountStatesResponse;
+import com.example.mvpdemo.models.data_models.GetMovieDetailResponse;
 import com.example.mvpdemo.models.data_models.SetFavouriteMovieRequest;
 import com.example.mvpdemo.models.data_models.SetFavouriteMovieResponse;
 import com.example.mvpdemo.models.share_pref.AccountSharePref;
@@ -14,9 +17,9 @@ public class MovieDetailModel implements MovieDetailContract.Model {
     AccountSharePref accountSharePref;
     APIService service;
 
-    public MovieDetailModel(AccountSharePref accountSharePref, APIService service) {
+    public MovieDetailModel(AccountSharePref accountSharePref) {
         this.accountSharePref = accountSharePref;
-        this.service = service;
+        this.service = RetrofitConfiguration.getInstance().create(APIService.class);
     }
 
     @Override
@@ -34,7 +37,49 @@ public class MovieDetailModel implements MovieDetailContract.Model {
 
             @Override
             public void onFailure(Call<SetFavouriteMovieResponse> call, Throwable t) {
-                onFinishUpdateFavouriteMovie.onFailureUpdateFavouriteMovie(t.toString());
+                onFinishUpdateFavouriteMovie.onFailure(t.toString());
+            }
+        });
+    }
+
+    @Override
+    public void getMovieDetail(OnFinishGetMovieDetail onFinishGetMovieDetail, int movieId) {
+        Call<GetMovieDetailResponse> call = service.getMovieDetail(movieId);
+        call.enqueue(new Callback<GetMovieDetailResponse>() {
+            @Override
+            public void onResponse(Call<GetMovieDetailResponse> call, Response<GetMovieDetailResponse> response) {
+                onFinishGetMovieDetail.onResponseGetMovieDetail(
+                        response.code() == 200,
+                        response,
+                        accountSharePref.getSessionId() != null
+                );
+            }
+
+            @Override
+            public void onFailure(Call<GetMovieDetailResponse> call, Throwable t) {
+                onFinishGetMovieDetail.onFailure(t.toString());
+            }
+        });
+    }
+
+    @Override
+    public void getMovieAccountStates(OnFinishGetMovieAccountStates onFinishGetMovieAccountStates, int movieId) {
+        Call<GetMovieAccountStatesResponse> call = service.getMovieAccountStates(
+                movieId,
+                accountSharePref.getSessionId()
+        );
+        call.enqueue(new Callback<GetMovieAccountStatesResponse>() {
+            @Override
+            public void onResponse(Call<GetMovieAccountStatesResponse> call, Response<GetMovieAccountStatesResponse> response) {
+                onFinishGetMovieAccountStates.onResponseGetMovieAccountStates(
+                        response.code() == 200,
+                        response
+                );
+            }
+
+            @Override
+            public void onFailure(Call<GetMovieAccountStatesResponse> call, Throwable t) {
+                onFinishGetMovieAccountStates.onFailure(t.toString());
             }
         });
     }

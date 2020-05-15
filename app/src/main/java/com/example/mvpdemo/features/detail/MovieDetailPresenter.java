@@ -1,28 +1,23 @@
 package com.example.mvpdemo.features.detail;
 
-import com.example.mvpdemo.api.APIService;
-import com.example.mvpdemo.api.RetrofitConfiguration;
 import com.example.mvpdemo.models.data_models.GetMovieAccountStatesResponse;
 import com.example.mvpdemo.models.data_models.GetMovieDetailResponse;
 import com.example.mvpdemo.models.share_pref.AccountSharePref;
 
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MovieDetailPresenter implements MovieDetailContract.Presenter,
-        MovieDetailContract.Model.OnFinishUpdateFavouriteMovie {
+        MovieDetailContract.Model.OnFinishUpdateFavouriteMovie,
+        MovieDetailContract.Model.OnFinishGetMovieDetail,
+        MovieDetailContract.Model.OnFinishGetMovieAccountStates {
 
     MovieDetailContract.View view;
     MovieDetailContract.Model model;
     AccountSharePref accountSharePref;
-    APIService service;
 
     public MovieDetailPresenter(MovieDetailContract.View view, AccountSharePref accountSharePref) {
         this.view = view;
-        this.accountSharePref = accountSharePref;
-        this.service = RetrofitConfiguration.getInstance().create(APIService.class);
-        this.model = new MovieDetailModel(accountSharePref, service);
+        this.model = new MovieDetailModel(accountSharePref);
     }
 
     @Override
@@ -39,50 +34,7 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter,
     @Override
     public void getMovieDetail(int movieId) {
         view.showLoadingIndicator();
-        Call<GetMovieDetailResponse> call = service.getMovieDetail(movieId);
-        call.enqueue(new Callback<GetMovieDetailResponse>() {
-            @Override
-            public void onResponse(Call<GetMovieDetailResponse> call, Response<GetMovieDetailResponse> response) {
-                view.hideLoadingIndicator();
-                if (response.code() == 200) {
-                    view.showMovieDetail(response.body());
-                    if (accountSharePref.getSessionId() != null) getMovieAccountStates(movieId);
-                } else {
-                    view.showErrorFromServer(response);
-                    view.onBackPressed();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<GetMovieDetailResponse> call, Throwable t) {
-                view.hideLoadingIndicator();
-                view.showErrorWhenFailure(t.toString());
-            }
-        });
-    }
-
-    private void getMovieAccountStates(int movieId) {
-        Call<GetMovieAccountStatesResponse> call = service.getMovieAccountStates(
-                movieId,
-                accountSharePref.getSessionId()
-        );
-        call.enqueue(new Callback<GetMovieAccountStatesResponse>() {
-            @Override
-            public void onResponse(Call<GetMovieAccountStatesResponse> call, Response<GetMovieAccountStatesResponse> response) {
-                view.hideLoadingIndicator();
-                if (response.code() == 200) {
-                    view.updateFavouriteIcon(response.body().isFavorite());
-                } else {
-                    view.showErrorFromServer(response);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<GetMovieAccountStatesResponse> call, Throwable t) {
-                view.hideLoadingIndicator();
-                view.showErrorWhenFailure(t.toString());
-            }
-        });
+        model.getMovieDetail(this, movieId);
     }
 
     @Override
@@ -96,7 +48,32 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter,
     }
 
     @Override
-    public void onFailureUpdateFavouriteMovie(String error) {
+    public void onResponseGetMovieDetail(boolean isSuccess, Response<GetMovieDetailResponse> response, boolean isAuth) {
+        view.hideLoadingIndicator();
+        if (response.code() == 200) {
+            view.showMovieDetail(response.body());
+            if (isAuth) {
+                view.showLoadingIndicator();
+                model.getMovieAccountStates(this, response.body().getId());
+            }
+        } else {
+            view.showErrorFromServer(response);
+            view.onBackPressed();
+        }
+    }
+
+    @Override
+    public void onResponseGetMovieAccountStates(boolean isSuccess, Response<GetMovieAccountStatesResponse> response) {
+        view.hideLoadingIndicator();
+        if (isSuccess) {
+            view.updateFavouriteIcon(response.body().isFavorite());
+        } else {
+            view.showErrorFromServer(response);
+        }
+    }
+
+    @Override
+    public void onFailure(String error) {
         view.hideLoadingIndicator();
         view.showErrorWhenFailure(error);
     }

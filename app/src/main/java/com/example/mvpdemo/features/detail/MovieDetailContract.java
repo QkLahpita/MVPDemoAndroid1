@@ -1,5 +1,6 @@
 package com.example.mvpdemo.features.detail;
 
+import com.example.mvpdemo.models.data_models.GetMovieAccountStatesResponse;
 import com.example.mvpdemo.models.data_models.GetMovieDetailResponse;
 
 import retrofit2.Response;
@@ -25,9 +26,23 @@ public interface MovieDetailContract {
     interface Model {
         interface OnFinishUpdateFavouriteMovie {
             void onResponseUpdateFavouriteMovie(boolean isSuccess, Response response, boolean isFavourite);
-            void onFailureUpdateFavouriteMovie(String error);
+            void onFailure(String error);
         }
 
         void updateFavouriteMovie(OnFinishUpdateFavouriteMovie onFinishUpdateFavouriteMovie, int movieId, boolean isFavourite);
+
+        interface OnFinishGetMovieDetail {
+            void onResponseGetMovieDetail(boolean isSuccess, Response<GetMovieDetailResponse> response, boolean isAuth);
+            void onFailure(String error);
+        }
+
+        void getMovieDetail(OnFinishGetMovieDetail onFinishGetMovieDetail, int movieId);
+
+        interface OnFinishGetMovieAccountStates {
+            void onResponseGetMovieAccountStates(boolean isSuccess, Response<GetMovieAccountStatesResponse> response);
+            void onFailure(String error);
+        }
+
+        void getMovieAccountStates(OnFinishGetMovieAccountStates onFinishGetMovieAccountStates, int movieId);
     }
 }
