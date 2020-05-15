@@ -16,4 +16,13 @@ public interface MoviesContract {
     interface Presenter {
         void getMovies(int page);
     }
+
+    interface Model {
+        interface OnFinishedListener {
+            void onResponse(List<GetMoviesResponse.ResultsBean> movies);
+            void onFailure(String error);
+        }
+
+        void getMovies(OnFinishedListener onFinishedListener, int page);
+    }
 }
