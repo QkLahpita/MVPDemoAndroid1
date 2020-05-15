@@ -1,35 +1,24 @@
 package com.example.mvpdemo.features.account;
 
-import com.example.mvpdemo.api.APIService;
-import com.example.mvpdemo.api.RetrofitConfiguration;
-import com.example.mvpdemo.models.data_models.DeleteSessionIdRequest;
-import com.example.mvpdemo.models.data_models.DeleteSessionIdResponse;
-import com.example.mvpdemo.models.data_models.GetCreateRequestTokenResponse;
-import com.example.mvpdemo.models.data_models.PostCreateSessionRequest;
-import com.example.mvpdemo.models.data_models.PostCreateSessionResponse;
-import com.example.mvpdemo.models.data_models.PostCreateSessionWithLoginRequest;
-import com.example.mvpdemo.models.data_models.PostCreateSessionWithLoginResponse;
 import com.example.mvpdemo.models.share_pref.AccountSharePref;
 
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AccountPresenter implements AccountContract.Presenter {
+public class AccountPresenter implements AccountContract.Presenter,
+        AccountContract.Model.OnFinishSignIn,
+        AccountContract.Model.OnFinishSignOut {
 
     AccountContract.View view;
-    AccountSharePref accountSharePref;
-    APIService service;
+    AccountContract.Model model;
 
     public AccountPresenter(AccountContract.View view, AccountSharePref accountSharePref) {
         this.view = view;
-        this.accountSharePref = accountSharePref;
-        this.service = RetrofitConfiguration.getInstance().create(APIService.class);
+        this.model = new AccountModel(accountSharePref);
     }
 
     @Override
     public void getSessionId() {
-        if (accountSharePref.getSessionId() == null) {
+        if (model.getSessionId() == null) {
             view.showLoginSection();
         } else {
             view.showAccountSection();
@@ -38,107 +27,37 @@ public class AccountPresenter implements AccountContract.Presenter {
 
     @Override
     public void signIn(String username, String password) {
-        createRequestToken(username, password);
+        view.showLoadingIndicator();
+        model.signIn(this, username, password);
     }
 
     @Override
     public void signOut() {
         view.showLoadingIndicator();
-        DeleteSessionIdRequest body = new DeleteSessionIdRequest();
-        body.setSession_id(accountSharePref.getSessionId());
-        Call<DeleteSessionIdResponse> call = service.deleteSessionId(body);
-        call.enqueue(new Callback<DeleteSessionIdResponse>() {
-            @Override
-            public void onResponse(Call<DeleteSessionIdResponse> call, Response<DeleteSessionIdResponse> response) {
-                view.hideLoadingIndicator();
-                if (response.code() == 200) {
-                    view.showLoginSection();
-                    accountSharePref.saveSessionId(null);
-                } else {
-                    view.showErrorFromServer(response);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<DeleteSessionIdResponse> call, Throwable t) {
-                view.hideLoadingIndicator();
-                view.showErrorWhenFailure(t.toString());
-            }
-        });
+        model.signOut(this);
     }
 
-    private void createRequestToken(String username, String password) {
-        view.showLoadingIndicator();
-        Call<GetCreateRequestTokenResponse> call = service.getCreateRequestToken();
-        call.enqueue(new Callback<GetCreateRequestTokenResponse>() {
-            @Override
-            public void onResponse(Call<GetCreateRequestTokenResponse> call, Response<GetCreateRequestTokenResponse> response) {
-                if (response.code() == 200) {
-                    createSessionWithLogin(response.body().getRequest_token(), username, password);
-                } else {
-                    view.hideLoadingIndicator();
-                    view.showErrorFromServer(response);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<GetCreateRequestTokenResponse> call, Throwable t) {
-                view.hideLoadingIndicator();
-                view.showErrorWhenFailure(t.toString());
-            }
-        });
+    @Override
+    public void onResponseSignInSuccess() {
+        view.hideLoadingIndicator();
+        view.showAccountSection();
     }
 
-    private void createSessionWithLogin(String token, String username, String password) {
-        PostCreateSessionWithLoginRequest body = new PostCreateSessionWithLoginRequest();
-        body.setUsername(username);
-        body.setPassword(password);
-        body.setRequest_token(token);
-
-        Call<PostCreateSessionWithLoginResponse> call = service.postCreateSessionWithLogin(body);
-        call.enqueue(new Callback<PostCreateSessionWithLoginResponse>() {
-            @Override
-            public void onResponse(Call<PostCreateSessionWithLoginResponse> call, Response<PostCreateSessionWithLoginResponse> response) {
-                if (response.code() == 200) {
-                    createSession(response.body().getRequest_token());
-                } else {
-                    view.hideLoadingIndicator();
-                    view.showErrorFromServer(response);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<PostCreateSessionWithLoginResponse> call, Throwable t) {
-                view.hideLoadingIndicator();
-                view.showErrorWhenFailure(t.toString());
-            }
-        });
+    @Override
+    public void onResponseSignInError(Response response) {
+        view.hideLoadingIndicator();
+        view.showErrorFromServer(response);
     }
 
-    private void createSession(String token) {
-        PostCreateSessionRequest body = new PostCreateSessionRequest();
-        body.setRequest_token(token);
+    @Override
+    public void onResponseSignOut(boolean isSuccess) {
+        view.hideLoadingIndicator();
+        if (isSuccess) view.showLoginSection();
+    }
 
-        Call<PostCreateSessionResponse> call = service.postCreateSession(body);
-        call.enqueue(new Callback<PostCreateSessionResponse>() {
-            @Override
-            public void onResponse(Call<PostCreateSessionResponse> call, Response<PostCreateSessionResponse> response) {
-                if (response.code() == 200) {
-                    view.hideLoadingIndicator();
-                    view.showAccountSection();
-
-                    accountSharePref.saveSessionId(response.body().getSession_id());
-                } else {
-                    view.hideLoadingIndicator();
-                    view.showErrorFromServer(response);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<PostCreateSessionResponse> call, Throwable t) {
-                view.hideLoadingIndicator();
-                view.showErrorWhenFailure(t.toString());
-            }
-        });
+    @Override
+    public void onFailure(String error) {
+        view.hideLoadingIndicator();
+        view.showErrorWhenFailure(error);
     }
 }

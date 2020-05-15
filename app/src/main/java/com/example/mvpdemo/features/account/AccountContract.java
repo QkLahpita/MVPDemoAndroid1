@@ -17,4 +17,26 @@ public interface AccountContract {
         void signIn(String username, String password);
         void signOut();
     }
+
+    interface Model {
+        String getSessionId();
+
+        interface OnFinishSignIn {
+            void onResponseSignInSuccess();
+
+            void onResponseSignInError(Response response);
+
+            void onFailure(String error);
+        }
+
+        void signIn(OnFinishSignIn onFinishSignIn, String username, String password);
+
+        interface OnFinishSignOut {
+            void onResponseSignOut(boolean isSuccess);
+
+            void onFailure(String error);
+        }
+
+        void signOut(OnFinishSignOut onFinishSignOut);
+    }
 }
