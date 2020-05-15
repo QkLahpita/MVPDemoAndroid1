@@ -21,4 +21,13 @@ public interface MovieDetailContract {
         void updateFavouriteMovie(int movieId, boolean isFavourite);
         void getMovieDetail(int movieId);
     }
+
+    interface Model {
+        interface OnFinishUpdateFavouriteMovie {
+            void onResponseUpdateFavouriteMovie(boolean isSuccess, Response response, boolean isFavourite);
+            void onFailureUpdateFavouriteMovie(String error);
+        }
+
+        void updateFavouriteMovie(OnFinishUpdateFavouriteMovie onFinishUpdateFavouriteMovie, int movieId, boolean isFavourite);
+    }
 }
