@@ -23,6 +23,11 @@ public class MovieDetailModel implements MovieDetailContract.Model {
     }
 
     @Override
+    public String getSessionId() {
+        return accountSharePref.getSessionId();
+    }
+
+    @Override
     public void updateFavouriteMovie(OnFinishUpdateFavouriteMovie onFinishUpdateFavouriteMovie, int movieId, boolean isFavourite) {
         SetFavouriteMovieRequest body = new SetFavouriteMovieRequest(movieId, !isFavourite);
         Call<SetFavouriteMovieResponse> call = service.setFavouriteMovie(body, accountSharePref.getSessionId());

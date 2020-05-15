@@ -24,6 +24,8 @@ public interface MovieDetailContract {
     }
 
     interface Model {
+        String getSessionId();
+
         interface OnFinishUpdateFavouriteMovie {
             void onResponseUpdateFavouriteMovie(boolean isSuccess, Response response, boolean isFavourite);
             void onFailure(String error);

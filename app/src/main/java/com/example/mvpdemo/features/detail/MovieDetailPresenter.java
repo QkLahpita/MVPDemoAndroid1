@@ -13,7 +13,6 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter,
 
     MovieDetailContract.View view;
     MovieDetailContract.Model model;
-    AccountSharePref accountSharePref;
 
     public MovieDetailPresenter(MovieDetailContract.View view, AccountSharePref accountSharePref) {
         this.view = view;
@@ -22,7 +21,7 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter,
 
     @Override
     public void getSessionId() {
-        view.showFavouriteIcon(accountSharePref.getSessionId() != null);
+        view.showFavouriteIcon(model.getSessionId() != null);
     }
 
     @Override
